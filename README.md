@@ -6,9 +6,11 @@ macOS / Windows 両対応のターミナルエミュレータ設定。
 
 ### 前提条件
 
-- [WezTerm](https://wezfurlong.org/wezterm/installation.html) がインストール済みであること
+- [WezTerm](https://wezfurlong.org/wezterm/installation.html) がインストール済みであること（nightly 推奨、下記参照）
 - フォント [HackGen35 Console NF](https://github.com/yuru7/HackGen/releases) がインストール済みであること
 - **Windows のみ**: WSL に Ubuntu がインストール済みであること（`wsl --install` で導入可能）
+
+> **Stable vs Nightly**: 一部の設定（`show_close_tab_button_in_tabs` 等）は nightly 版でのみ有効です。最新の stable（20240203）以降新しい stable リリースが出ていないため、すべての機能を使うには [nightly 版](https://wezfurlong.org/wezterm/installation.html) のインストールを推奨します。stable 版でも該当設定は無視されるだけで動作に支障はありません。
 
 ### セットアップ
 
@@ -40,7 +42,7 @@ New-Item -ItemType SymbolicLink -Force -Path "$env:USERPROFILE\.config\wezterm\k
 | 項目 | macOS | Windows |
 |---|---|---|
 | シェル | `/bin/zsh` | WSL (Ubuntu) |
-| 修飾キー | `Cmd` | `Alt` |
+| 基本操作キー | `Cmd` | `Ctrl + Shift` |
 | Leader キー | `Cmd + ;` | `Alt + ;` |
 | フォントサイズ | 13.0 | 11.0 |
 | 透過効果 | macOS Blur | Win32 Acrylic |
@@ -51,12 +53,14 @@ New-Item -ItemType SymbolicLink -Force -Path "$env:USERPROFILE\.config\wezterm\k
 
 | 操作 | macOS | Windows |
 |---|---|---|
-| コピー | `Cmd + c` | `Alt + c` |
-| ペースト | `Cmd + v` | `Alt + v` |
-| 検索 | `Cmd + f` | `Alt + f` |
-| 設定リロード | `Cmd + r` | `Alt + r` |
+| コピー | `Cmd + c` | `Ctrl + Shift + c` |
+| ペースト | `Cmd + v` | `Ctrl + Shift + v` |
+| 検索 | `Cmd + f` | `Ctrl + Shift + f` |
+| 設定リロード | `Cmd + r` | `Ctrl + Shift + r` |
 
 #### Leader キー (`Cmd + ;` / `Alt + ;`) の後に入力
+
+> Leader キー押下中はステータスバー右側にショートカット一覧が表示されます。
 
 | キー | 操作 |
 |---|---|
@@ -84,3 +88,75 @@ New-Item -ItemType SymbolicLink -Force -Path "$env:USERPROFILE\.config\wezterm\k
 | `y` | コピーして終了 |
 | `/` | 検索 |
 | `q` / `Escape` | コピーモード終了 |
+
+---
+
+## Starship
+
+クロスプラットフォーム対応のシェルプロンプト設定。
+
+### 前提条件
+
+- フォント [HackGen35 Console NF](https://github.com/yuru7/HackGen/releases) がインストール済みであること（Nerd Font アイコンで使用）
+
+### インストール
+
+#### macOS
+
+```sh
+brew install starship
+```
+
+#### Windows (WSL)
+
+WSL の Ubuntu 内で実行:
+
+```sh
+curl -sS https://starship.rs/install.sh | sh
+```
+
+### セットアップ
+
+#### macOS
+
+```sh
+# 設定ディレクトリを作成
+mkdir -p ~/.config
+
+# シンボリックリンクを作成
+ln -sf $(pwd)/starship/starship.toml ~/.config/starship.toml
+```
+
+シェルの初期化ファイル（`~/.zshrc`）に以下を追記:
+
+```sh
+eval "$(starship init zsh)"
+```
+
+#### Windows (WSL)
+
+WSL の Ubuntu 内で実行:
+
+```sh
+# 設定ディレクトリを作成
+mkdir -p ~/.config
+
+# シンボリックリンクを作成
+# dotfiles を WSL 側に clone している場合
+ln -sf $(pwd)/starship/starship.toml ~/.config/starship.toml
+
+# dotfiles が Windows 側にある場合（例: /mnt/c/Users/<ユーザー名>/workspace/dotfiles）
+# ln -sf /mnt/c/Users/<ユーザー名>/workspace/dotfiles/starship/starship.toml ~/.config/starship.toml
+```
+
+シェルの初期化ファイルに以下を追記:
+
+```sh
+# bash (~/.bashrc)
+eval "$(starship init bash)"
+
+# zsh (~/.zshrc)
+eval "$(starship init zsh)"
+```
+
+> **注意**: WSL から Windows 側のファイル（`/mnt/c/...`）へのシンボリックリンクはI/Oが遅くなる場合があります。可能であれば dotfiles を WSL 側のファイルシステム（`~/` 以下）に clone することを推奨します。

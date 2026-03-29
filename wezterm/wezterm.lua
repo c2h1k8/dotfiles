@@ -72,10 +72,11 @@ config.colors = {
 
 -- キーバインドは外部ファイルから読み込む
 config.disable_default_key_bindings = true
-local mod = is_windows and "ALT" or "SUPER"
-config.leader = { key = ";", mods = mod, timeout_milliseconds = 2000 }
+local base_mod = is_windows and "CTRL|SHIFT" or "SUPER"  -- 基本操作用
+local leader_mod = is_windows and "ALT" or "SUPER"       -- Leader トリガー用
+config.leader = { key = ";", mods = leader_mod, timeout_milliseconds = 2000 }
 local keybinds = require("keybinds")
-config.keys = keybinds.keys(mod)
+config.keys = keybinds.keys(base_mod)
 config.key_tables = keybinds.key_tables
 
 

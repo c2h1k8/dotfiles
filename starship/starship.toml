@@ -1,0 +1,188 @@
+# ========================================
+# Starship 設定（Powerline風 + 右側表示）
+# macOS / Windows(WSL) 共通
+# ========================================
+
+# ----------------------------------------
+# format: 左側（左プロンプト）の構成
+# - directory → git branch/status → 改行 → 入力記号
+# - \ は「改行しないで続ける」（見た目をつなぐ）ためのバックスラッシュ
+# - [ ](...) は Powerline の区切り（色をつなぐ）
+# ----------------------------------------
+format = """
+$directory\
+[ ](fg:#88C0D0 bg:#1d2230)\
+$git_branch\
+$git_status\
+[ ](fg:#1d2230)\
+\n$character
+"""
+
+# ----------------------------------------
+# right_format: 右側（右プロンプト）の構成
+# - cmd_duration: コマンド実行時間（閾値以上）
+# - hostname: SSH中だけ "ssh" を表示（ssh_session が無い環境向けの代替）
+# - username: SSH中など必要な時だけ表示（show_always=false）
+# - time: 時刻（HH:MM）
+# ----------------------------------------
+right_format = """
+$cmd_duration\
+$hostname\
+$username\
+✨\
+$time
+"""
+
+# ----------------------------------------
+# add_newline: プロンプトの前に空行を入れる
+# - true: 1コマンドごとに間が空いて見やすい
+# - false: 詰めて表示（省スペース）
+# ----------------------------------------
+add_newline = true
+
+# ----------------------------------------
+# fill: 左と右の間を何で埋めるか
+# - ここを " " にするとスペースで埋めて、右プロンプトが右端に寄る
+# ----------------------------------------
+[fill]
+symbol = " "
+
+# ----------------------------------------
+# username: ユーザー名表示
+# - show_always=false で普段は出さず、必要な状況（SSHなど）で出やすい
+# - format の $user がユーザー名
+# ----------------------------------------
+[username]
+style_user = "white bold"
+style_root = "black bold"
+format = "user: [$user]($style) "
+disabled = false
+show_always = false
+
+# ----------------------------------------
+# directory: カレントディレクトリ表示（背景色つき）
+# - truncation_length: パスが長いときに残す階層数（短いほど右が崩れにくい）
+# - truncate_to_repo=false: Gitリポジトリ基準ではなくフルパス基準で切る
+# - truncation_symbol: 省略時の記号
+# - read_only: 書き込み不可時の表示（鍵アイコン）
+# - format: 表示フォーマット（$path がパス）
+# ----------------------------------------
+[directory]
+style = "fg:#2E3440 bg:#88C0D0 bold"
+truncation_length = 5
+truncate_to_repo = false
+truncation_symbol = "…/"
+read_only = " 󰌾 "
+read_only_style = "fg:#f7768e bg:#1a1b26"
+format = "[ $path ]($style)[$read_only]($read_only_style)"
+
+# ----------------------------------------
+# directory.substitutions: 特定ディレクトリ名をアイコンに置換
+# - Documents → 󰈙  のように表示が短くなって見やすい
+# ----------------------------------------
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+# ----------------------------------------
+# aws/gcloud: クラウド系モジュールは不要なら無効化（表示のノイズ削減）
+# ----------------------------------------
+[aws]
+disabled = true
+
+[gcloud]
+disabled = true
+
+# ----------------------------------------
+# git_branch: ブランチ名表示
+# - symbol: ブランチアイコン
+# - style/bg: 背景色で Powerline セグメント風に
+# - format: 表示の仕方（$branch がブランチ名）
+# ----------------------------------------
+[git_branch]
+symbol = ""
+style = "bg:#1d2230"
+format = '[[ $symbol $branch ](fg:#769ff0 bg:#1d2230)]($style)'
+
+# ----------------------------------------
+# git_status: 変更状態（staged/modified/untracked など）表示
+# - $all_status / $ahead_behind で状態をまとめて表示
+# ----------------------------------------
+[git_status]
+style = "bg:#1d2230"
+format = '[[($all_status$ahead_behind )](fg:#769ff0 bg:#1d2230)]($style)'
+
+# ----------------------------------------
+# cmd_duration: コマンド実行時間
+# - min_time=500: 0.5秒以上かかった時だけ表示（1msだと常に出てうるさい）
+# - format: $duration が "1s 230ms" のような文字列
+# ----------------------------------------
+[cmd_duration]
+min_time = 500
+style = "fg:#e0af68"
+format = "[$duration]($style)"
+
+# ----------------------------------------
+# hostname: SSH中だけ表示（ssh_session が使えない環境向け）
+# - ssh_only=true: SSH接続中だけ表示
+# - ssh_symbol="ssh": ホスト名ではなく "ssh" とだけ表示（短くて右が崩れにくい）
+# - format: $ssh_symbol をスタイル付きで表示
+# ----------------------------------------
+[hostname]
+disabled = false
+ssh_only = true
+ssh_symbol = "ssh"
+style = "bold yellow"
+format = "[$ssh_symbol]($style) "
+
+# ----------------------------------------
+# time: 時刻表示
+# - time_format="%R": HH:MM
+# - format: 角括弧 [ ... ] の中が表示文字列、($style) がそのスタイル
+# ----------------------------------------
+[time]
+disabled = false
+time_format = "%R"
+style = "fg:#a0a9cb"
+format = "[   $time ]($style)"
+
+# ----------------------------------------
+# shell: 現在のシェル表示
+# - WSL(bash/zsh)とPowerShellを行き来する場合に便利
+# - 普段は邪魔なので無効化（必要なら disabled=false に）
+# ----------------------------------------
+[shell]
+disabled = true
+bash_indicator = "bash"
+zsh_indicator = "zsh"
+powershell_indicator = "pwsh"
+style = "fg:#a0a9cb"
+format = "[$indicator]($style) "
+
+# ----------------------------------------
+# os: OS表示
+# - SSH先やWSL内でどこにいるか一目でわかる
+# - 普段は邪魔なので無効化（必要なら disabled=false に）
+# ----------------------------------------
+[os]
+disabled = true
+style = "fg:#a0a9cb"
+
+[os.symbols]
+Windows = "󰍲 "
+Macos = " "
+Linux = " "
+Ubuntu = " "
+
+# ----------------------------------------
+# character: 入力記号
+# - vimcmd_symbol: zshのviモードで「コマンドモード」時の表示
+# - success_symbol: 正常終了時
+# - error_symbol: 異常終了時（赤で表示）
+# ----------------------------------------
+[character]
+vimcmd_symbol = "[V](bold green) "
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"

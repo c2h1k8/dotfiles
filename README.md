@@ -1,5 +1,20 @@
 # dotfiles
 
+macOS で使っているターミナル環境（WezTerm + Starship）を Windows でも同じ見た目・操作感で再現するための設定です。詳細は各セクション参照。
+
+## Windows で Mac と同じ環境を作る（クイックスタート）
+
+Windows でも Mac と同じデザインにするには、以下を順に行います。ポイントは **同じフォント（HackGen35 Console NF）を Windows 側に入れること**です。これが揃えばプロンプトのレイアウト・色・アイコンは Mac と一致します。
+
+1. **WSL(Ubuntu) を導入**（未導入の場合）— PowerShell で `wsl --install`
+2. **フォントをインストール** — [HackGen35 Console NF](https://github.com/yuru7/HackGen/releases) を **Windows 側**にインストール（WezTerm は Windows ネイティブアプリなので、WSL 側ではなく Windows にフォントが必要）
+3. **WezTerm を導入** — [公式](https://wezfurlong.org/wezterm/installation.html)（nightly 推奨）
+4. **このリポジトリを clone** — WSL 側（`~/` 以下）推奨。※ WezTerm 設定のリンク作成は Windows 側パスを指すため、Windows からアクセスできる場所に置く
+5. **WezTerm 設定をリンク** — [WezTerm › セットアップ › Windows](#windows-powershell) の手順
+6. **Starship を導入・設定** — WSL(Ubuntu) 内で [Starship](#starship) セクションの「Windows (WSL)」手順
+
+> **デザインの一貫性について**: 上記でレイアウト・色・アイコンは Mac と一致します。ごく僅かな差として、右プロンプトの `✨` 絵文字の字形（OS の絵文字フォント差）と、背景ぼかしの質感（Mac=Blur / Windows=Acrylic）だけは環境依存で微妙に異なりますが、デザインの骨格は同じです。
+
 ## WezTerm
 
 macOS / Windows 両対応のターミナルエミュレータ設定。
@@ -36,6 +51,8 @@ New-Item -ItemType SymbolicLink -Force -Path "$env:USERPROFILE\.config\wezterm\k
 ```
 
 > WSL のディストリビューション名がデフォルトの `Ubuntu` 以外の場合は、`wezterm.lua` 内の `WSL:Ubuntu` を実際の名前に変更してください（`wsl -l` で確認可能）。
+
+> **フォント**: WezTerm は Windows ネイティブアプリのため、フォント [HackGen35 Console NF](https://github.com/yuru7/HackGen/releases) は **Windows 側**にインストールしてください（WSL 側ではありません）。これが Mac と同じデザインになる前提条件です。
 
 ### OS ごとの差異
 
